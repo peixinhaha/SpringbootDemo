@@ -1,0 +1,22 @@
+logging:
+  path: /work/java/code/bp-data
+  level:
+    cn.phyworks.bp: info
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/spring-boot-bp?autoReconnect=true&failOverReadOnly=false&useUnicode=true&characterEncoding=UTF-8
+    username: blog
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+
+server:
+  port: 8083
