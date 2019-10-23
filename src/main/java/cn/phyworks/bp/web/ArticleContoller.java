@@ -1,6 +1,5 @@
 package cn.phyworks.bp.web;
 
-import cn.phyworks.bp.dao.ArticleMapper;
 import cn.phyworks.bp.pojo.bo.ArticleServiceGetBo;
 import cn.phyworks.bp.pojo.bo.ArticleServiceSaveBo;
 import cn.phyworks.bp.pojo.bo.ArticleServiceUpdateBo;
@@ -13,6 +12,8 @@ import cn.phyworks.bp.support.Output;
 import cn.phyworks.bp.util.WebUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -29,10 +30,8 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @Slf4j
+@Api(tags = {"文章"})
 public class ArticleContoller {
-    @Autowired
-    private ArticleMapper articleMapper;
-
     @Autowired
     private ArticleService articleService;
 
@@ -42,6 +41,7 @@ public class ArticleContoller {
      * @param articleControllerSaveForm ArticleControllerSaveForm
      * @return Output
      */
+    @ApiOperation("新增")
     @RequestMapping(value = "/articles", method = RequestMethod.POST)
     public Output save(@Validated ArticleControllerSaveForm articleControllerSaveForm) throws Exception {
         ArticleServiceSaveDto articleServiceSaveDto = new ArticleServiceSaveDto();
@@ -66,6 +66,7 @@ public class ArticleContoller {
      * @param articleControllerUpdateForm ArticleControllerUpdateForm
      * @return Output
      */
+    @ApiOperation("更新")
     @RequestMapping(value = "/articles/{id}", method = RequestMethod.PATCH)
     public Output update(@PathVariable Long id, @Validated ArticleControllerUpdateForm articleControllerUpdateForm) throws Exception {
         ArticleServiceUpdateDto articleServiceUpdateDto = new ArticleServiceUpdateDto();
@@ -89,6 +90,7 @@ public class ArticleContoller {
      * @param id Long
      * @return Output
      */
+    @ApiOperation("删除")
     @RequestMapping(value = "/articles/{id}", method = RequestMethod.DELETE)
     public Output remove(@PathVariable Long id) throws Exception {
         articleService.remove(id);
@@ -101,6 +103,7 @@ public class ArticleContoller {
      * @param id Long
      * @return Output
      */
+    @ApiOperation("根据id查询")
     @RequestMapping(value = "/articles/{id}", method = RequestMethod.GET)
     public Output get(@PathVariable Long id) throws Exception {
         return WebUtil.outputSuccess(articleService.getById(id));
@@ -112,6 +115,7 @@ public class ArticleContoller {
      * @param type String, id Long
      * @return Output
      */
+    @ApiOperation("查询分页")
     @RequestMapping(value = "articles/{type}/{param}", method = RequestMethod.GET)
     public Output listPagination(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                  @RequestParam(value = "page_size", defaultValue = "20") Integer pageSize,
@@ -121,16 +125,5 @@ public class ArticleContoller {
         List<ArticleServiceGetBo> articleServiceGetBos = articleService.listPaginationByType(type, param);
         PageInfo<ArticleServiceGetBo> pageInfo = new PageInfo<ArticleServiceGetBo>(articleServiceGetBos);
         return WebUtil.outputSuccess(articleServiceGetBos, pageInfo);
-    }
-
-    /**
-     * 测试用
-     *
-     * @param
-     * @return Ouput
-     */
-    @RequestMapping(value = "/version", method = RequestMethod.GET)
-    public Output test() throws Exception {
-        return WebUtil.outputSuccess(1);
     }
 }
