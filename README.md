@@ -16,14 +16,11 @@
 - [ ] 文档管理
 - [x] 事务处理
 - [ ] 中间件
-- [ ] 数据库迁移
-
-参考：
-- [IntelliJ IDEA 2018.2（Ultimate Edition）激活方法](https://blog.csdn.net/m0_38110132/article/details/81383573)
-- [IntelliJ IDEA 内存优化最佳实践](http://blog.oneapm.com/apm-tech/426.html)
-- [Jet Brains家族破解方法](https://www.jianshu.com/p/f404994e2843)
+- [x] 数据库迁移
 
 ### Docker MySQL
+也可以不用，直接本地起mysql就行
+
 本地启动：  
 ```
 docker run -p 3306:3306 --name mysql5.6 -v /Volumes/Work/project-java/bp-data/mysql56:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.6
