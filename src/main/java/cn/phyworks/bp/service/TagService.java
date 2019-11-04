@@ -1,5 +1,6 @@
 package cn.phyworks.bp.service;
 
+import cn.phyworks.bp.annotation.TransactionalForException;
 import cn.phyworks.bp.dao.TagMapper;
 import cn.phyworks.bp.domain.TagDo;
 import cn.phyworks.bp.pojo.bo.TagServiceSaveBo;
@@ -11,6 +12,10 @@ import cn.phyworks.bp.util.WebUtil;
 import com.github.pagehelper.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +28,8 @@ import org.springframework.validation.annotation.Validated;
  */
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "tagCache")
+@TransactionalForException
 public class TagService {
 
     @Autowired
@@ -31,7 +38,7 @@ public class TagService {
     /**
      * 标签新增
      */
-    @Transactional(rollbackFor = Exception.class)
+    @CachePut(key = "'all'")
     public TagServiceSaveBo save(@Validated TagServiceSaveDto tagServiceSaveDto) throws Exception{
         // 判断重复
         if (tagMapper.getByName(tagServiceSaveDto.getName()) != null) {
@@ -60,6 +67,7 @@ public class TagService {
     /**
      * 删除
      */
+    @CacheEvict(key = "'all'")
     public void remove(Long id) throws Exception {
         // 判断是否存在
         if (tagMapper.get(id) == null) {
@@ -72,6 +80,7 @@ public class TagService {
     /**
      * 更新
      */
+    @CachePut(key = "'all'")
     public TagServiceUpdateBo update(@Validated TagServiceUpdateDto tagServiceUpdateDto) throws Exception {
         // 判断是否存在
         if (tagMapper.get(tagServiceUpdateDto.getId()) == null) {
@@ -98,7 +107,7 @@ public class TagService {
         return tagServiceUpdateBo;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Cacheable(key = "'all'")
     public Page<TagDo> listPagination() throws Exception {
         return tagMapper.listPagination();
     }
